@@ -1,0 +1,25 @@
+#!/bin/bash
+# 使用curl检查网页是否可以正常访问，如果无法访问则钉钉报警。
+DATE=`date +%F:%H:%M:%S`
+
+for host in $(cat /home/bak/host.txt|sed "/^#/d")
+        do
+        if curl -s -I -L --connect-timeout 5 --max-time 10 $host | grep -q 20*||30*;
+
+        then
+                echo "$DATE  web maybe OK"  
+                time=3
+        else
+                time=3
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=699ebb05427554cd923809e1afe4abe958e23843c3635c887b6a553fa34aeb60' \
+                -H 'Content-Type: application/json' \
+                -d '
+                {"msgtype": "text", 
+                "text": {
+                "content": "Date : '"$DATE"'\nHost : '"$host"'\nProblem :  页面访问异常 "
+                }
+                }'
+                echo "$DATE $host web maybe faild" >> /tmp/2.log
+        fi
+done
+                                                         

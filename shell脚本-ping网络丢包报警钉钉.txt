@@ -1,0 +1,28 @@
+#!/bin/bash
+for ip in $(cat /home/bak/ip.txt|sed "/^#/d")    #ip_list是当前目录下IP表
+  do
+     ping -c 1 $ip &>/dev/null            #三个ping有一个能通，说明服务器正常
+     a=$?
+     sleep 2
+     ping -c 1 $ip &>/dev/null
+     b=$?
+     sleep 2
+     ping -c 1 $ip &>/dev/null
+     c=$?
+     sleep 2
+     DATE=$(date +%F" "%H:%M)
+     if [ $a -ne 0 -a $b -ne 0 -a $c -ne 0 ];then
+        # echo -e "Date : $DATE\nHost : $ip\nProblem : Ping is failed." && /bin/python $DING
+        curl 'https://oapi.dingtalk.com/robot/send?access_token=699ebb05427554cd923809e1afe4abe958e23843c3635c887b6a553fa34aeb60' \
+        -H 'Content-Type: application/json' \
+        -d '
+        {"msgtype": "text", 
+        "text": {
+        "content": "Date : '"$DATE"'\nHost : '"$ip"'\nProblem : Ping is failed"
+            }
+         }'
+        echo " $ip `/bin/date +\%Y\%m\%d\%H\:%M:\%S`  ping is failed." >> /tmp/1.log
+     else
+         echo "$ip `/bin/date +\%Y\%m\%d\%H:\%M:\%S`  ping is successful." >> /tmp/1.log
+     fi
+done
