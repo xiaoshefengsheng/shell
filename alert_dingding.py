@@ -27,7 +27,7 @@ def send_msg(title, content):
     '''
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # 办公网监控群
-    url = 'https://oapi.dingtalk.com/robot/send?access_token=b5a4a7f4675640b7f4efa856e2d02bc8e1107a03040a2616e53b708eaa6df045'
+    url = 'https://oapi.dingtalk.com/robot/send?access_token=b5a4a7f4675640b7f4efa856e2d02bc8e11******708eaa6df045'
     headers = {'content-type': 'application/json'}
     payload = {
         "msgtype": "markdown",
